@@ -1,4 +1,5 @@
 import router from './router'
+import 'maz-ui/styles' // or import 'maz-ui/css/main.css'
 import '@/assets/reset.css'
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -7,6 +8,7 @@ import { Icon } from 'vant';
 import { Tabbar, TabbarItem } from 'vant';
 import { createPinia } from 'pinia'
 import { Col, Row } from 'vant';
+
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
