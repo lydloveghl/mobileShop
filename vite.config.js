@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from '@vant/auto-import-resolver';
+import NutUIResolver from '@nutui/auto-import-resolver'
 import { defineConfig } from 'vite';
 import path from 'path';
 
@@ -12,7 +13,7 @@ export default {
       resolvers: [VantResolver()],
     }),
     Components({
-      resolvers: [VantResolver()],
+      resolvers: [VantResolver(),NutUIResolver()],
     }),
   ], resolve: {
     alias: {

@@ -28,6 +28,7 @@
                     </template>
                 </van-field>
             </van-cell-group>
+            <van-button round type="success">登录</van-button>
         </section>
     </div>
 </template>
@@ -47,6 +48,7 @@ onBeforeMount(async () => {
 const phoneNumber = ref('')
 const sms = ref([])
 const sendCheckCode =async () => {
+    console.log(phoneNumber.value)
     let {data:res} = await sendCode(phoneNumber.value)
     console.log(res)
 }
@@ -72,6 +74,7 @@ const sendCheckCode =async () => {
             }
         }
         section{
+            // height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -81,10 +84,17 @@ const sendCheckCode =async () => {
                 // flex-direction: row;
                 // width: 50px;
                 margin: 10px 0;
+                margin-top: 30px;
                 .m-country-selector{
                     width: 100px;
                 }
             }
+        }
+        .van-button--success{
+            background-color: red;
+            width: 190px;
+            border: 0;
+            margin-top: 20px;
         }
 
     }

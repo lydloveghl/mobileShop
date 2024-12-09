@@ -1,5 +1,5 @@
 <template>
-    <div index>
+    <div class="index">
         <div class="headerNav">
             <van-icon name="wap-nav"></van-icon>
             <van-search
@@ -8,14 +8,15 @@
             @click="router.push({path:'/index/search'})"
             disabled
             />
-            <span>登录</span>
+            <span @click="router.push({path:'/login'})">登录</span>
         </div>
         <section>
-            
+            <index-banner></index-banner>
         </section>
     </div>
 </template>
 <script setup>
+    import IndexBanner from '@/components/IndexBanner.vue';
     import {useRouter} from 'vue-router'
     import { storeToRefs } from 'pinia';
     import { useCounterStore } from '@/stores/counter';
@@ -28,21 +29,34 @@
     })
 </script>
 <style lang="less">
-    .headerNav{
-        width: 100%;
-        height: 50px;
+    .index{
+        height: calc(100% - 50px);
         display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        border-bottom: 1px solid #ddd;
-        .van-icon{
-            font-size: 19px;
+        flex-direction: column;
+        .headerNav{
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            .van-icon{
+                font-size: 19px;
+            }
+            .van-search{
+                padding: 0;
+            }
+            span{
+                color: red;
+            }
         }
-        .van-search{
-            padding: 0;
-        }
-        span{
-            color: red;
+        section{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            // justify-content: center;
+            align-items: center;
+
         }
     }
 </style>
