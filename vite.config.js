@@ -2,6 +2,8 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from '@vant/auto-import-resolver';
+import { defineConfig } from 'vite';
+import path from 'path';
 
 export default {
   plugins: [
@@ -12,5 +14,9 @@ export default {
     Components({
       resolvers: [VantResolver()],
     }),
-  ],
+  ], resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
 };
