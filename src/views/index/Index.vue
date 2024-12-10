@@ -17,7 +17,14 @@
                 <index-banner></index-banner>
                 <category-banner></category-banner>
                 <my-sec-kill :secKillList="secKillList"></my-sec-kill>
-                <goods-list :goodsList="goodsList"></goods-list>
+                <van-list
+                v-model:loading="loading"
+                :finished="finished"
+                finished-text="没有更多了"
+                @load="onLoad"
+                >
+                    <goods-list :goodsList="goodsList"></goods-list>
+                </van-list>
             </nut-pull-refresh>
         </section>
     </div>
@@ -37,20 +44,51 @@
     const {currentRouter} = storeToRefs(store)
     const secKillList = ref([])
     const goodsList = ref([])
-    onBeforeMount(async () => {
-        store.currentRouter = router.currentRoute.value.path
+    const goodsListCount = ref(1)
+    let getSecKillList = async () => {
         let {data:res} = await getSecKill(1,8)
-        // console.log(res)
         secKillList.value = res.data
-        let {data:goods} = await getGoodsList(1,30)
+    }
+    let get_GoodsList = async () => {
+        let {data:goods} = await getGoodsList(goodsListCount.value,30)
         goodsList.value = goods.data
+    }
+    onBeforeMount(() => {
+        store.currentRouter = router.currentRoute.value.path
+        getSecKillList()
+        get_GoodsList()
     })
     const refresh = ref(false)
     const refreshFun = () => {
-    setTimeout(() => {
-        refresh.value = false
-    }, 1000)
+        setTimeout(() => {
+            refresh.value = false
+            let randomCount = parseInt(Math.random() * (4-1) +1)
+            if(goodsListCount === randomCount){
+                randomCount = parseInt(Math.random() * (4-1) +1)
+            }
+            goodsListCount.value = randomCount
+            get_GoodsList()
+        }, 1000)
     }
+    const list = ref([]);
+    const loading = ref(false);
+    const finished = ref(false);
+
+    const onLoad = async () => {
+        goodsListCount.value += 1
+        let{data:addGoodsList} = await getGoodsList(goodsListCount.value,30)
+      // 异步更新数据
+      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+      setTimeout(() => {
+        goodsList.value = [...goodsList.value,...addGoodsList.data]
+        // 加载状态结束
+        loading.value = false;
+        // 数据全部加载完成
+        if (addGoodsList.data.length === 0) {
+          finished.value = true;
+        }
+      }, 1000);
+    };
 </script>
 <style lang="less">
     .index{
