@@ -13,21 +13,28 @@
         <section>
             <index-banner></index-banner>
             <category-banner></category-banner>
+            <my-sec-kill :secKillList="secKillList"></my-sec-kill>
         </section>
     </div>
 </template>
 <script setup>
     import CategoryBanner from '@/components/CategoryBanner.vue'; 
     import IndexBanner from '@/components/IndexBanner.vue';
+    import MySecKill from '@/components/MySecKill.vue';
     import {useRouter} from 'vue-router'
     import { storeToRefs } from 'pinia';
     import { useCounterStore } from '@/stores/counter';
     import {ref,onBeforeMount} from 'vue'
+    import { getSecKill } from '@/apis';
     const router = useRouter()
     const store = useCounterStore()
     const {currentRouter} = storeToRefs(store)
-    onBeforeMount(() => {
+    const secKillList = ref([])
+    onBeforeMount(async () => {
         store.currentRouter = router.currentRoute.value.path
+        let {data:res} = await getSecKill(1,8)
+        // console.log(res)
+        secKillList.value = res.data
     })
 </script>
 <style lang="less">
@@ -58,7 +65,7 @@
             flex-direction: column;
             // justify-content: center;
             align-items: center;
-            background-color: #ddd;
+            // background-color: #ddd;
         }
     }
 </style>
