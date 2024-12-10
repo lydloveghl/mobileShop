@@ -12,10 +12,12 @@
         </div>
         <section>
             <index-banner></index-banner>
+            <category-banner></category-banner>
         </section>
     </div>
 </template>
 <script setup>
+    import CategoryBanner from '@/components/CategoryBanner.vue'; 
     import IndexBanner from '@/components/IndexBanner.vue';
     import {useRouter} from 'vue-router'
     import { storeToRefs } from 'pinia';
@@ -56,7 +58,7 @@
             flex-direction: column;
             // justify-content: center;
             align-items: center;
-
+            background-color: #ddd;
         }
     }
 </style>
