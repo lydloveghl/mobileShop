@@ -1,7 +1,7 @@
 <template>
     <div class="index">
         <div class="headerNav">
-            <van-icon name="wap-nav"></van-icon>
+            <van-icon name="wap-nav" @click="router.push({path:'/category'})"></van-icon>
             <van-search
             shape="round"
             placeholder="请输入搜索关键词"
@@ -25,6 +25,8 @@
                 >
                     <goods-list :goodsList="goodsList"></goods-list>
                 </van-list>
+                <!-- <nut-backtop el-id="elId2" :distance="100" :bottom="90"></nut-backtop> -->
+                <van-back-top immediate bottom="80px"/>
             </nut-pull-refresh>
         </section>
     </div>

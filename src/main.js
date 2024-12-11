@@ -4,10 +4,9 @@ import '@/assets/reset.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import '@/assets/base.css'
-import { Icon,List,Button,Col,Row,Tabbar,TabbarItem } from 'vant';
+import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop} from 'vant';
 import { createPinia } from 'pinia'
-import { Swiper, SwiperItem } from '@nutui/nutui'
-import { PullRefresh } from '@nutui/nutui'
+import { Swiper, SwiperItem,PullRefresh,Category, CategoryPane} from '@nutui/nutui'
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
@@ -22,4 +21,8 @@ app.use(Swiper)
 app.use(SwiperItem)
 app.use(PullRefresh)
 app.use(List)
+// app.use(Backtop)
+app.use(BackTop)
+app.use(Category)
+app.use(CategoryPane)
 app.mount('#app')
