@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <router-view :loginInfo="userInfo"></router-view>
-    <footer-nav :loginInfo="userInfo" v-if="store.currentRouter !== '/index/search' && store.currentRouter !== '/login' && store.currentRouter !== '/register' "></footer-nav>
+    <router-view name="footer" :loginInfo="userInfo"></router-view>
   </div>
 </template>
 <script setup>

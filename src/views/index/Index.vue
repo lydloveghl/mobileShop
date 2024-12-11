@@ -23,7 +23,7 @@
                 finished-text="没有更多了"
                 @load="onLoad"
                 >
-                    <goods-list :goodsList="goodsList"></goods-list>
+                    <goods-list :goodsList="goodsList" :loginInfo="loginInfo.loginInfo"></goods-list>
                 </van-list>
                 <!-- <nut-backtop el-id="elId2" :distance="100" :bottom="90"></nut-backtop> -->
                 <van-back-top immediate bottom="80px"/>
