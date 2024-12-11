@@ -25,7 +25,7 @@ import {useRouter} from 'vue-router'
 import {storeToRefs} from 'pinia'
 import { useCounterStore } from '@/stores/counter';
 import { hotSearch } from '@/apis/search';
-let loginInfo = defineProps('loginInfo');
+let loginInfo = defineProps(['loginInfo']);
 const router = useRouter()
 const store = useCounterStore()
 const {currentRouter} = storeToRefs(store)
@@ -40,7 +40,7 @@ const showChange = () => {
     showStatus.value = !showStatus.value
 }
 const getSearchResult = () => {
-    if(loginInfo.code !== 200){
+    if(loginInfo.loginInfo.code !== '200'){
         router.push({path:'/login'})
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <router-view :loginInfo="userInfo"></router-view>
-    <footer-nav :loginInfo="userInfo" v-if="store.currentRouter !== '/index/search' && store.currentRouter !== '/login' "></footer-nav>
+    <footer-nav :loginInfo="userInfo" v-if="store.currentRouter !== '/index/search' && store.currentRouter !== '/login' && store.currentRouter !== '/register' "></footer-nav>
   </div>
 </template>
 <script setup>
@@ -16,8 +16,9 @@ const store = useCounterStore()
 const userInfo = ref([]);
 const {currentRouter} = storeToRefs(store)
 onBeforeMount( async () => {
-  let {data:res} = await loginCheck();
+  let {data:res} = await loginCheck(store.userId);
   userInfo.value = res
+  console.log(res)
 }) 
 
 </script>

@@ -4,7 +4,7 @@ import '@/assets/reset.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import '@/assets/base.css'
-import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop} from 'vant';
+import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop,Toast,showFailToast,showSuccessToast} from 'vant';
 import { createPinia } from 'pinia'
 import { Swiper, SwiperItem,PullRefresh,Category, CategoryPane} from '@nutui/nutui'
 const app = createApp(App)
@@ -12,6 +12,7 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 app.use(Tabbar)
+app.use(showSuccessToast)
 app.use(Button)
 app.use(TabbarItem)
 app.use(Icon)
@@ -25,4 +26,6 @@ app.use(List)
 app.use(BackTop)
 app.use(Category)
 app.use(CategoryPane)
+app.use(Toast)
+app.use(showFailToast)
 app.mount('#app')

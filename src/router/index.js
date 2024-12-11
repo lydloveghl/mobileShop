@@ -6,7 +6,8 @@ const routes = [
     {path:'/index/search',component:() => import('@/views/index/Search.vue')},
     {path:'/category',component:() => import('@/views/category/Category.vue')},
     {path:'/cart',component:() => import('@/views/cart/Cart.vue')},
-    {path:'/login',component:() => import('@/views/login/Login.vue')}
+    {path:'/login',component:() => import('@/views/login/Login.vue')},
+    {path:'/register',component:() => import('@/views/register/register.vue')},
 ]
 const router = createRouter({
     history:createWebHashHistory(),

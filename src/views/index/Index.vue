@@ -41,8 +41,10 @@
     import { useCounterStore } from '@/stores/counter';
     import {ref,onBeforeMount,onMounted} from 'vue'
     import { getGoodsList, getSecKill } from '@/apis';
+    import { loginCheck } from '@/apis/login';
     const router = useRouter()
     const store = useCounterStore()
+    const {loginInfo} = defineProps(['loginInfo'])
     const {currentRouter} = storeToRefs(store)
     const secKillList = ref([])
     const goodsList = ref([])
@@ -50,6 +52,11 @@
     let getSecKillList = async () => {
         let {data:res} = await getSecKill(1,8)
         secKillList.value = res.data
+    }
+    let lCheck = async () => {
+        let {data:checkResult} = await loginCheck(JSON.parse(localStorage.getItem('user')).userid)
+        console.log(checkResult)
+        loginInfo.loginInfo = checkResult
     }
     let get_GoodsList = async () => {
         let {data:goods} = await getGoodsList(goodsListCount.value,30)
@@ -59,6 +66,10 @@
         store.currentRouter = router.currentRoute.value.path
         getSecKillList()
         get_GoodsList()
+        lCheck()
+    })
+    onMounted(() => {
+        lCheck()
     })
     const refresh = ref(false)
     const refreshFun = () => {
