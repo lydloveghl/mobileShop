@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nutui/icons-vue": "^0.1.1",
     "@nutui/nutui": "^4.3.13",
     "axios": "^1.7.9",
     "libphonenumber-js": "^1.11.16",
