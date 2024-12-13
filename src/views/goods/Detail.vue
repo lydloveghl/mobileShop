@@ -90,9 +90,55 @@
                 <van-action-bar-icon icon="shop-o" text="店铺" color="#ee0a24"/>
                 <van-action-bar-icon icon="comment-o" text="客服" />
                 <van-action-bar-icon icon="shopping-cart-o" text="购物车"/>
-                <van-action-bar-button type="warning" text="加入购物车" />
+                <van-action-bar-button type="warning" text="加入购物车" @click="customBySlot = true"/>
                 <van-action-bar-button type="danger" text="立即购买" />
             </van-action-bar>
+            <nut-sku
+              v-model:visible="customBySlot"
+              :goods="data.goods"
+              :btnOptions="['buy', 'cart']"
+              @changeStepper="changeStepper"
+              @clickBtnOperate="clickBtnOperate"
+            >
+              <!-- 商品展示区，价格区域 -->
+              <template #sku-header-price>
+                <div>
+                  <nut-price :price="goodsDetail.originprice" :needSymbol="true" :thousands="false"> </nut-price>
+                  <span class="tag"></span>
+                </div>
+              </template>
+              <!-- 商品展示区，编号区域 -->
+              <template #sku-header-extra>
+                <span class="nut-sku-header-right-extra">重量：0.1kg 编号：{{ goodsDetail.proid }} </span>
+              </template>
+              <!-- sku 展示区上方与商品信息展示区下方区域，无默认展示内容 -->
+              <template #sku-select-top>
+                <div class="address">
+                  <nut-cell
+                    style="box-shadow:none;padding:13px 0"
+                    title="送至"
+                    :desc="addressDesc"
+                    @click="showAddressPopup = true"
+                  ></nut-cell>
+                </div>
+              </template>
+              <!-- 底部按钮操作区 -->
+              <template #sku-operate>
+                <div class="sku-operate-box">
+                  <nut-button class="sku-operate-item" shape="square" type="warning" @click="addInCart">加入购物车</nut-button>
+                  <nut-button class="sku-operate-item" shape="square" type="primary">立即购买</nut-button>
+                </div>
+              </template>
+            </nut-sku>
+
+            <nut-address
+              v-model:visible="showAddressPopup"
+              type="exist"
+              :exist-address="existAddress"
+              :is-show-custom-address="false"
+              @selected="selectedAddress"
+              exist-address-title="配送至"
+            ></nut-address>
         </footer>
     </div>
 </template>
@@ -104,6 +150,7 @@ import { useRouter } from 'vue-router';
 import { getGoodsDetail } from '@/apis/goods';
 import { getPlaceList } from '@/apis/place';
 import { getRecommendGoods } from '@/apis/goods';
+import { addCart } from '@/apis/cart';
 const router = useRouter();
 const goodsDetail = ref([])
 const goodsBanner = ref([])
@@ -127,7 +174,6 @@ onBeforeMount(async () => {
     goodsDetail.value = res.data
     console.log(res.data)
     let {data:address} = await getPlaceList(store.userId)
-    console.log(address)
     userAddress.value = address.data
     for(var i = 0; i < userAddress.value.length;i++){
         var newObj = {
@@ -144,11 +190,24 @@ onBeforeMount(async () => {
         existAddress.value.push(newObj)
     }
     let {data:recommend} = await getRecommendGoods(1,20)
-    console.log(recommend)
     recommendGoods.value = recommend.data
     bannerPage.value = Math.ceil(recommendGoods.value.length / 6)
+    data.goods.imagePath = goodsDetail.value.img1
+    data.goods.price = goodsDetail.value.originprice
+    data.goods.skuId = goodsDetail.value.proid
 
 })
+const addInCart = async () => {
+  let {data:addResult} = await addCart(JSON.parse(localStorage.getItem('user')).userid, data.goods.skuId,buyCount.value )
+  console.log(addResult)
+}
+const buyCount = ref(0)
+const changeStepper = (count) => {
+  buyCount.value = count
+}
+const data = reactive({
+    goods: {}
+  })
 const val = ref(1)
 const onChange = (index) => {
   val.value = index + 1
@@ -257,6 +316,20 @@ const handleclick = (info) => {
 const clickImages = (imgs) => {
   console.log('进行图片展示', imgs)
 }
+const customBySlot = ref(false)
+const showAddressPopup = ref(false)
+
+const addressDesc = ref('(配送地会影响库存，请先确认)')
+const selectedAddress = (prevExistAdd, nowExistAdd) => {
+  const { provinceName, countyName, cityName } = nowExistAdd
+  addressDesc.value = `${provinceName}${countyName}${cityName}`
+}
+// 底部操作按钮触发
+const clickBtnOperate = (op) => {
+  console.log('点击了操作按钮', op)
+}
+
+
 </script>
 <style lang="less" scoped>
     .detail{
@@ -342,6 +415,23 @@ const clickImages = (imgs) => {
             .van-action-bar-button{
                 border-radius: 40px;
                 margin: 5px;
+            }
+            .sku-operate-box {
+              width: 100%;
+              display: flex;
+              padding: 8px 10px;
+              box-sizing: border-box;
+            }
+            .sku-operate-item {
+              flex: 1;
+            }
+            .sku-operate-item:first-child {
+              border-top-left-radius: 20px;
+              border-bottom-left-radius: 20px;
+            }
+            .sku-operate-item:last-child {
+              border-top-right-radius: 20px;
+              border-bottom-right-radius: 20px;
             }
         }
         header.visible{

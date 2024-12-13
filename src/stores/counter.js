@@ -8,4 +8,6 @@ export const useCounterStore = defineStore('counter',() => {
     const token = ''
     return {currentRouter,router,userId,token}
     
+},{
+    persist:true
 })
