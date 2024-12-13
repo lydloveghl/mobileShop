@@ -1,7 +1,7 @@
 <template>
     <div class="detail">
         <header :class="{ visible: showHeader }">
-            <IconFont name="left"></IconFont>
+            <IconFont name="left" @click="router.back"></IconFont>
             <div class="titleTab">
                 <span :class="{active : activeTab === 0}" @click="scrollToSection(0)">商品<i></i></span>
                 <span :class="{active : activeTab === 1}" @click="scrollToSection(1)">评价<i></i></span>
@@ -10,8 +10,8 @@
             </div>
             <IconFont name="more-x"></IconFont>
         </header>
-        <section>
-            <div id="goods" class="section">
+        <section ref="containerRef" @scroll="handleScroll">
+            <div id="goods" class="section" ref="goodsRef">
                 <nut-swiper :auto-play="3000" @change="onChange">
                     <nut-swiper-item v-for="(item, index) in goodsBanner" :key="index" style="height: 250px">
                     <img :src="item" alt="" style="height: 100%; width: 100%" draggable="false" />
@@ -42,7 +42,7 @@
                     @change="placeChange"
                 ></nut-address>
             </div>
-            <div id="evaluate" class="section">
+            <div id="evaluate" class="section" ref="evaluateRef">
                 <nut-comment
                 :images="cmt.images"
                 :videos="cmt.videos"
@@ -59,11 +59,31 @@
                 </template>
             </nut-comment>
             </div>
-            <div id="recommend" class="section">
+            <div id="recommend" class="section" ref="recommendRef">
                 <h1><span></span>猜你喜欢</h1>
-                <div></div>
+                <div class="recommendBox">
+                  <van-swipe @change="onChange">
+                    <van-swipe-item v-for="item in bannerPage">
+                      <van-grid :gutter="2" :column-num="3">
+                        <van-grid-item v-for="value in recommendGoods.slice(6 *(item - 1),item *6)" :key="value">
+                          <template #default>
+                            <van-image
+                            :src="value.img1"
+                            />
+                            <van-text-ellipsis :content="value.proname" rows="1"/>
+                            <p>&yen;{{ value.originprice }}</p>
+                          </template>
+                        </van-grid-item>
+                      </van-grid>
+                    </van-swipe-item>
+                  </van-swipe>
+                </div>
             </div>
-            <div id="details" class="section"></div>
+            <div id="details" class="section" ref="detailsRef">
+              <img :src="goodsDetail.img1" alt="">
+              <img :src="goodsDetail.img2" alt="">
+              <img :src="goodsDetail.img3" alt="">
+            </div>
         </section>
         <footer>
             <van-action-bar>
@@ -83,6 +103,7 @@ import { useCounterStore } from '@/stores/counter';
 import { useRouter } from 'vue-router';
 import { getGoodsDetail } from '@/apis/goods';
 import { getPlaceList } from '@/apis/place';
+import { getRecommendGoods } from '@/apis/goods';
 const router = useRouter();
 const goodsDetail = ref([])
 const goodsBanner = ref([])
@@ -94,8 +115,11 @@ const goodsRef = ref(null);
 const evaluateRef = ref(null);
 const detailsRef = ref(null);
 const recommendRef = ref(null);
+const containerRef = ref(null)
 const sectionRefs = [goodsRef, evaluateRef, detailsRef, recommendRef];
 const showHeader = ref(false);
+const recommendGoods = ref([])
+const bannerPage = ref(0)
 onBeforeMount(async () => {
     console.log(router)
     let {data:res} = await getGoodsDetail(router.currentRoute.value.params.proid)
@@ -119,6 +143,11 @@ onBeforeMount(async () => {
         }
         existAddress.value.push(newObj)
     }
+    let {data:recommend} = await getRecommendGoods(1,20)
+    console.log(recommend)
+    recommendGoods.value = recommend.data
+    bannerPage.value = Math.ceil(recommendGoods.value.length / 6)
+
 })
 const val = ref(1)
 const onChange = (index) => {
@@ -129,21 +158,20 @@ let scrollToSection = async (index) => {
   if (targetRef.value) {
     await nextTick(); 
     const offsetTop = targetRef.value.offsetTop;
-    window.scrollTo({
+    containerRef.value.scrollTo({
       top: offsetTop - 50, 
       behavior: 'smooth',
     });
     activeTab.value = index;
+    console.log(activeTab.value)
   }
 }
 const handleScroll = () => {
-    const scrollTop = window.scrollY;
+    const scrollTop = containerRef.value.scrollTop;
     showHeader.value = scrollTop > 100; 
-    console.log(scrollHeader.value)
     sectionRefs.forEach((refItem, index) => {
         if (refItem.value) {
         const rect = refItem.value.getBoundingClientRect();
-        
         if (rect.top <= 60 && rect.bottom >= 60) {
             activeTab.value = index;
         }
@@ -205,10 +233,6 @@ const placeChange = (cal) => {
     showPopupOther.value = false
   }
 }
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
-
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
@@ -217,6 +241,9 @@ const closeMask = (val) => {
 }
 let cmt = ref({})
 onMounted(() => {
+  if(containerRef.value){
+    window.addEventListener('scroll', handleScroll);
+  }
   fetch('//storage.360buyimg.com/nutui/3x/comment_data.json')
     .then((response) => response.json())
     .then((res) => {
@@ -249,11 +276,17 @@ const clickImages = (imgs) => {
                 padding: 10px;
                 margin-bottom: 10px;
             }
+            #details{
+              width: 100%;
+              img{
+                width: 100%;
+              }
+            }
             #recommend{
                 background-color: #fff;
                 padding: 10px;
                 box-sizing: border-box;
-
+                margin-bottom: 10px;
                 h1{
                     display: flex;
                     height: 30px;
@@ -265,6 +298,17 @@ const clickImages = (imgs) => {
                         background-image: linear-gradient(to bottom,red ,#fff);
                         display: inline-block;
                     }
+                }
+                .recommendBox{
+                  width: 100%;
+                  // height: 200px;
+                  .van-swipe{
+                    width: 100%;
+                    height: 100%;
+                    .van-grid-item{
+
+                    }
+                  }
                 }
             }
             #goods{
@@ -300,12 +344,15 @@ const clickImages = (imgs) => {
                 margin: 5px;
             }
         }
+        header.visible{
+          display: flex;
+        }
         header{
             width: 100%;
             height: 50px;
-            display: flex;
+            display: none;
             position: sticky;
-            top: -50px;
+            top: 0;
             // align-items: center;
             background-color: #f5f5f5;
             // padding: 0 10px;
@@ -329,6 +376,11 @@ const clickImages = (imgs) => {
                         background-image: linear-gradient(to right bottom,red,#fff);
 
                     }
+                }
+                span.active{
+                  i{
+                    display: inline-block;
+                  }
                 }
             }    
                 .nut-icon{

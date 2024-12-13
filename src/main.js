@@ -4,7 +4,7 @@ import '@/assets/reset.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import '@/assets/base.css'
-import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop,Toast,showFailToast,showSuccessToast,ActionBar, ActionBarIcon, ActionBarButton} from 'vant';
+import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop,Toast,showFailToast,showSuccessToast,ActionBar, ActionBarIcon, ActionBarButton,Grid, GridItem} from 'vant';
 import { createPinia } from 'pinia'
 import { Swiper, SwiperItem,PullRefresh,Category, CategoryPane,Tabs, TabPane,Price, Ellipsis,Address,Comment } from '@nutui/nutui'
 import { IconFont } from '@nutui/icons-vue'
@@ -21,6 +21,8 @@ app.use(Tabs)
 app.use(TabPane)
 app.use(ActionBar);
 app.use(ActionBarIcon);
+app.use(Grid);
+app.use(GridItem);
 app.use(ActionBarButton);
 app.use(showSuccessToast)
 app.use(Button)
