@@ -11,3 +11,9 @@ export function changeFlag(cartid,flag){
 export function changeCartNum(cartid,num){
     return request.post('/cart/updatenum',{cartid,num})
 }
+export function removeCart(cartid){
+    return request.post('/cart/remove',{cartid})
+}
+export function isAll(userid,type){
+    return request.post('/cart/selectall',{userid,type})
+}

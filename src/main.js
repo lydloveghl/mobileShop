@@ -4,7 +4,7 @@ import '@/assets/reset.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import '@/assets/base.css'
-import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop,Toast,showFailToast,showSuccessToast,ActionBar, ActionBarIcon, ActionBarButton,Grid, GridItem,Checkbox, CheckboxGroup,Stepper} from 'vant';
+import { Icon,List,Button,Col,Row,Tabbar,TabbarItem,BackTop,Toast,showFailToast,showSuccessToast,ActionBar,SubmitBar, ActionBarIcon, ActionBarButton,SwipeCell,Grid, GridItem,Checkbox, CheckboxGroup,Stepper} from 'vant';
 import { createPinia } from 'pinia'
 import { Swiper, SwiperItem,PullRefresh,Category, CategoryPane,Tabs, TabPane,Price, Ellipsis,Address,Comment } from '@nutui/nutui'
 import { IconFont } from '@nutui/icons-vue'
@@ -18,9 +18,11 @@ pinia.use(piniaPluginPersistedstate)
 app.use(router)
 app.use(Tabbar)
 app.use(Comment)
+app.use(SubmitBar)
 app.use(IconFont)
 app.use(Checkbox)
 app.use(CheckboxGroup)
+app.use(SwipeCell);
 app.use(Stepper);
 app.use(Address)
 app.use(Tabs)

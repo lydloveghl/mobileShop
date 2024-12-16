@@ -15,3 +15,10 @@
         cartList.value = cart.data
     })
 </script>
+<style lang="less">
+.cart{
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 50px);
+}
+</style>
